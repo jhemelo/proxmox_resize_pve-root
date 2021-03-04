@@ -1,0 +1,44 @@
+Copied from https://gist.github.com/laineantti/4fc29acbbd25593619a76b413e42b78f
+
+
+# if you are running out of space within your /dev/mapper/pve-root direcroty, running Proxmox Virtual Environment 6.3-4
+#just run the commands below:
+
+# Check disk space before
+df -h
+root@alpha:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                   63G     0   63G   0% /dev
+tmpfs                  13G   18M   13G   1% /run
+/dev/mapper/pve-root  28G   28G   0G  100% /
+tmpfs                  63G   43M   63G   1% /dev/shm
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                  63G     0   63G   0% /sys/fs/cgroup
+VMs                   872G  128K  872G   1% /VMs
+SSD-data              906G  128K  906G   1% /SSD-data
+/dev/fuse              30M   20K   30M   1% /etc/pve
+tmpfs                  13G     0   13G   0% /run/user/0
+
+    # Delete local-lvm storage in gui
+
+    lvremove /dev/pve/data
+
+    lvresize -l +100%FREE /dev/pve/root
+
+    resize2fs /dev/mapper/pve-root
+
+# Check disk space after
+df -h
+
+root@alpha:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                   63G     0   63G   0% /dev
+tmpfs                  13G   18M   13G   1% /run
+/dev/mapper/pve-root  102G   16G   82G  17% /
+tmpfs                  63G   43M   63G   1% /dev/shm
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                  63G     0   63G   0% /sys/fs/cgroup
+VMs                   872G  128K  872G   1% /VMs
+SSD-data              906G  128K  906G   1% /SSD-data
+/dev/fuse              30M   20K   30M   1% /etc/pve
+tmpfs                  13G     0   13G   0% /run/user/0
